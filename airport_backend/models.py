@@ -1,10 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-import datetime
-
-class User(AbstractUser):
-    pass
-
+from airport_service import settings
 
 class Crew(models.Model):
     first_name = models.CharField(max_length=100)
@@ -62,7 +58,32 @@ class Route(models.Model):
     def __str__(self):
         return (f"Route: From: {self.source.name} - To: {self.destination.name}. "
                 f"Distance: {self.distance}.")
+    
 
+class Airport(models.Model):
+    name = models.CharField(max_length=100)
+    closest_big_city = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"Airport: {self.name}, {self.closest_big_city}"
+    
+
+class Route(models.Model):
+    source = models.ForeignKey(
+        Airport,
+        on_delete=models.CASCADE,
+        related_name="route_source",
+    )
+    destination = models.ForeignKey(
+        Airport,
+        on_delete=models.CASCADE,
+        related_name="route_destination"
+    )
+    distance = models.IntegerField(blank=False, null=False)
+
+    def __str__(self):
+        return (f"Route: From: {self.source.name} - To: {self.destination.name}. "
+                f"Distance: {self.distance}")
 
 class Flight(models.Model):
     route = models.ForeignKey(
@@ -86,7 +107,16 @@ class Flight(models.Model):
 
 
 class Order(models.Model):
-    pass
+    created_at = models.DateTimeField()
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name = "order"
+    )
+
+    def __str__(self):
+        return f"Time: {self.created_at}"
+
 
 
 class Ticket(models.Model):
@@ -106,29 +136,3 @@ class Ticket(models.Model):
     def __str__(self):
         return (f"Ticket - Row: {self.row}. Seat: {self.seat}. "
                 f"Flight: {self.flight.route}")
-
-
-class Airport(models.Model):
-    name = models.CharField(max_length=100)
-    closest_big_city = models.CharField(max_length=100)
-
-    def __str__(self):
-        return f"Airport: {self.name}, {self.closest_big_city}"
-
-
-class Route(models.Model):
-    source = models.ForeignKey(
-        Airport,
-        on_delete=models.CASCADE,
-        related_name="route",
-    )
-    destination = models.ForeignKey(
-        Airport,
-        on_delete=models.CASCADE,
-        related_name="route"
-    )
-    distance = models.IntegerField(blank=False, null=False)
-
-    def __str__(self):
-        return (f"Route: From: {self.source.name} - To: {self.destination.name}. "
-                f"Distance: {self.distance}")
