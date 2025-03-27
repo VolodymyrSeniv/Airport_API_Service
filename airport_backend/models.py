@@ -46,32 +46,6 @@ class Route(models.Model):
     source = models.ForeignKey(
         Airport,
         on_delete=models.CASCADE,
-        related_name="route",
-    )
-    destination = models.ForeignKey(
-        Airport,
-        on_delete=models.CASCADE,
-        related_name="route"
-    )
-    distance = models.IntegerField(blank=False, null=False)
-
-    def __str__(self):
-        return (f"Route: From: {self.source.name} - To: {self.destination.name}. "
-                f"Distance: {self.distance}.")
-    
-
-class Airport(models.Model):
-    name = models.CharField(max_length=100)
-    closest_big_city = models.CharField(max_length=100)
-
-    def __str__(self):
-        return f"Airport: {self.name}, {self.closest_big_city}"
-    
-
-class Route(models.Model):
-    source = models.ForeignKey(
-        Airport,
-        on_delete=models.CASCADE,
         related_name="route_source",
     )
     destination = models.ForeignKey(
@@ -83,18 +57,19 @@ class Route(models.Model):
 
     def __str__(self):
         return (f"Route: From: {self.source.name} - To: {self.destination.name}. "
-                f"Distance: {self.distance}")
+                f"Distance: {self.distance}.")
+
 
 class Flight(models.Model):
     route = models.ForeignKey(
         Route,
         on_delete=models.CASCADE,
-        related_name="flight"
+        related_name="flight_route"
     )
     airplane = models.ForeignKey(
         Airplane,
         on_delete=models.CASCADE,
-        related_name="flight"
+        related_name="flight_airplane"
     )
     crew = models.ManyToManyField(Crew, related_name="flights")
     departure_time = models.DateTimeField()
@@ -125,12 +100,12 @@ class Ticket(models.Model):
     flight = models.ForeignKey(
         Flight,
         on_delete=models.CASCADE,
-        related_name="ticket"
+        related_name="ticket_flight"
     )
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
-        related_name="ticket"
+        related_name="ticket_order"
     )
 
     def __str__(self):
