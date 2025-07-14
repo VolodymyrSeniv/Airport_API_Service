@@ -1,17 +1,19 @@
 from django.db import models
+from datetime import datetime
 from django.contrib.auth.models import AbstractUser
 from airport_service import settings
+from django.core.exceptions import ValidationError
 
 class Crew(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"Crew member: {self.first_name} {self.last_name}"
+        return f"{self.first_name} {self.last_name}"
 
 
 class AirplaneType(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return f"Airplane type: {self.name}"
@@ -25,9 +27,13 @@ class Airplane(models.Model):
     airplane_type = models.ForeignKey(
         AirplaneType,
         on_delete=models.CASCADE,
-        related_name="airplane"
+        related_name="airplane_type"
     )
 
+    @property
+    def total_seats(self):
+        return self.rows * self.seats_in_row
+    
     def __str__(self):
         return (f"Airplane: {self.name}. "
                 f"Rows: {self.rows}. Seats per Row: {self.seats_in_row}. "
@@ -35,7 +41,7 @@ class Airplane(models.Model):
     
 
 class Airport(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     closest_big_city = models.CharField(max_length=100)
 
     def __str__(self):
@@ -55,10 +61,6 @@ class Route(models.Model):
     )
     distance = models.IntegerField(blank=False, null=False)
 
-    def __str__(self):
-        return (f"Route: From: {self.source.name} - To: {self.destination.name}. "
-                f"Distance: {self.distance}.")
-
 
 class Flight(models.Model):
     route = models.ForeignKey(
@@ -71,24 +73,27 @@ class Flight(models.Model):
         on_delete=models.CASCADE,
         related_name="flight_airplane"
     )
-    crew = models.ManyToManyField(Crew, related_name="flights")
-    departure_time = models.DateTimeField()
-    arrival_time = models.DateTimeField()
+    crew = models.ManyToManyField(Crew, related_name="flights_orders")
+    departure_time = models.DateTimeField(unique=True)
+    arrival_time = models.DateTimeField(unique=True)
 
-    def __str__(self):
-        return (f"Flight: {self.route}. Plane: {self.airplane}. "
-                f"Crew: {self.crew}. "
-                f"Departure time: {self.departure_time}. Arrival time: {self.arrival_time}")
+    # def __str__(self):
+    #     return (f"Flight: {self.route}. Plane: {self.airplane}. "
+    #             f"Crew: {self.crew}. "
+    #             f"Departure time: {self.departure_time}. Arrival time: {self.arrival_time}")
 
 
 class Order(models.Model):
-    created_at = models.DateTimeField()
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name = "order"
     )
 
+    @property
+    def created_at(self):
+        return datetime.now()
+    
     def __str__(self):
         return f"Time: {self.created_at}"
 
@@ -105,9 +110,36 @@ class Ticket(models.Model):
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
-        related_name="ticket_order"
+        related_name="tickets"
     )
+
+    class Meta:
+        unique_together = ("seat", "row")
+        ordering = ("row", "seat",)
 
     def __str__(self):
         return (f"Ticket - Row: {self.row}. Seat: {self.seat}. "
                 f"Flight: {self.flight.route}")
+    
+    @staticmethod
+    def validate_seat(seat, seats_in_row, error_to_raise):
+        if not (1 <= seat <= seats_in_row):
+            raise error_to_raise({
+                "seat": f"seat must be in range [1, {seats_in_row}]"
+                })
+    
+    @staticmethod
+    def validate_row(row, rows_in_plane, error_to_raise):
+        if not (1 <= row <= rows_in_plane):
+            raise error_to_raise({
+            "rows": f"row must be in range [1, {rows_in_plane}]"   
+            })
+
+
+    def clean(self):
+        Ticket.validate_seat(self.seat,
+                             self.flight.airplane.seats_in_row,
+                             ValidationError)
+        Ticket.validate_row(self.row,
+                            self.flight.airplane.rows,
+                            ValidationError)
