@@ -3,3 +3,5 @@ Diagram is simplified for you to be able to complete the project in time.
 But make sure to add some additional logic (like countries, cities) if you really want to dive deeper here.
 
 Super User password - vvv egor2001
+
+Staff User - bbb 12345
