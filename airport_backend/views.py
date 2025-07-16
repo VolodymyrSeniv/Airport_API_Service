@@ -7,6 +7,7 @@ from airport_backend.models import (Crew,
                                     Flight,
                                     Order,
                                     Ticket)
+from airport_backend.pagination import SmallClassesPagination, HugeClassesPagination
 from django.contrib.auth import get_user_model
 from airport_backend.serializers import (CrewSerializer,
                                          AirplaneTypeSerializer,
@@ -33,16 +34,19 @@ from django.db.models import F, Count
 class CrewModelViewSet(viewsets.ModelViewSet):
     serializer_class = CrewSerializer
     queryset = Crew.objects.all()
+    pagination_class = SmallClassesPagination
 
 
 class AirplaneTypeViewSet(viewsets.ModelViewSet):
     serializer_class = AirplaneTypeSerializer
     queryset = AirplaneType.objects.all()
+    pagination_class = SmallClassesPagination
 
 
 class AirplaneViewSet(viewsets.ModelViewSet):
     serializer_class = AirplaneSerializer
     queryset = Airplane.objects.all()
+    pagination_class = SmallClassesPagination
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -61,11 +65,13 @@ class AirplaneViewSet(viewsets.ModelViewSet):
 class AirportViewSet(viewsets.ModelViewSet):
     serializer_class = AirportSerializer
     queryset = Airport.objects.all()
+    pagination_class = SmallClassesPagination
 
 
 class RouteViewSet(viewsets.ModelViewSet):
     serializer_class = RouteSerializer
     queryset = Route.objects.select_related("source", "destination")
+    pagination_class = SmallClassesPagination
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -88,6 +94,7 @@ class FlightViewSet(viewsets.ModelViewSet):
         # prefetch the M2M “crew” in one extra query
         .prefetch_related("crew")
     )
+    pagination_class = HugeClassesPagination
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -120,11 +127,13 @@ class FlightViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = get_user_model().objects.all()
+    pagination_class = SmallClassesPagination
 
 
 class TicketViewSet(viewsets.ModelViewSet):
     serializer_class = TicketSerializer
     queryset = Ticket.objects.all()
+    pagination_class = HugeClassesPagination
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -144,6 +153,7 @@ class TicketViewSet(viewsets.ModelViewSet):
 class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     queryset = Order.objects.all()
+    pagination_class = HugeClassesPagination
 
     def get_serializer_class(self):
         if self.action == "list":

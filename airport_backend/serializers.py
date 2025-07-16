@@ -7,6 +7,7 @@ from airport_backend.models import (Crew,
                     Flight,
                     Order,
                     Ticket)
+from user.serializers import UserSerializer
 from django.contrib.auth import get_user_model
 from django.db import transaction
 
@@ -134,13 +135,6 @@ class FlightRetrieveSerialzier(FlightSerializer):
                   "arrival_time",
                   "crew",
                   "taken_seats")
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = get_user_model()
-        fields = ['id', 'username', 'email', 'first_name', 'last_name']
-
 
 
 class TicketSerializer(serializers.ModelSerializer):
