@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'airport_backend',
     'user',
+    "rest_framework.authtoken",
 ]
 
 

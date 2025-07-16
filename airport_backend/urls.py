@@ -1,6 +1,4 @@
-from django.contrib import admin
 from django.urls import path, include
-import airport_backend.urls
 from airport_backend.views import (AirplaneTypeViewSet,
                                    CrewModelViewSet,
                                    AirplaneViewSet,
