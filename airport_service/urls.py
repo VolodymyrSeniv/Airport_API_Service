@@ -19,10 +19,12 @@ from django.urls import path, include
 import airport_backend.urls
 import user.urls
 import debug_toolbar
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/airport/", include(airport_backend.urls), name="airport"),
     path("api/user/", include(user.urls), name="user"),
     path('__debug__/', include(debug_toolbar.urls)),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

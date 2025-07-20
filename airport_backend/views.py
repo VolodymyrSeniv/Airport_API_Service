@@ -9,6 +9,9 @@ from airport_backend.models import (Crew,
                                     Ticket)
 from airport_backend.pagination import SmallClassesPagination, HugeClassesPagination
 from django.contrib.auth import get_user_model
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework import status
 from airport_backend.serializers import (CrewSerializer,
                                          AirplaneTypeSerializer,
                                          AirplaneSerializer,
@@ -26,7 +29,9 @@ from airport_backend.serializers import (CrewSerializer,
                                          OrderListSerializer,
                                          OrderRetrieveSerializer,
                                          TicketSerializer,
-                                         TicketListSerializer)
+                                         TicketListSerializer,
+                                         CrewImageSerializer,
+                                         AirplaneImageSerializer)
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from airport_backend.permission import (IsAdminOrIfAuthenticatedReadOnly, 
@@ -41,6 +46,25 @@ class CrewModelViewSet(viewsets.ModelViewSet):
     pagination_class = SmallClassesPagination
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+
+    def get_serializer_class(self):
+        if self.action == "upload_image":
+            return CrewImageSerializer
+        return CrewSerializer
+    
+    @action(
+            methods={"POST"},
+            detail=True,
+            permission_classes=(OnlyAdminPermnissions,),
+            url_path="upload-image",
+    )
+    def upload_image(self, request, pk=None):
+        crew = self.get_object()
+        serializer = CrewImageSerializer(crew, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AirplaneTypeViewSet(viewsets.ModelViewSet):
@@ -63,7 +87,23 @@ class AirplaneViewSet(viewsets.ModelViewSet):
             return AirplaneListSerializer
         if self.action == "retrieve":
             return AirplaneRetrieveSerializer
+        if self.action == "upload_image":
+            return AirplaneImageSerializer
         return AirplaneSerializer
+    
+    @action(
+            methods={"POST"},
+            detail=True,
+            permission_classes=(OnlyAdminPermnissions,),
+            url_path="upload-image",
+    )
+    def upload_image(self, request, pk=None):
+        airplane = self.get_object()
+        serializer = AirplaneImageSerializer(airplane, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_queryset(self):
         queryset = self.queryset

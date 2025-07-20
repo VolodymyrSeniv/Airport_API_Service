@@ -1,12 +1,17 @@
 from django.db import models
 from datetime import datetime
-from django.contrib.auth.models import AbstractUser
 from airport_service import settings
+from airport_backend.utils import create_custom_path_crew, create_custom_path_airplane
 from django.core.exceptions import ValidationError
 
 class Crew(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
+    image = models.ImageField(null=True, upload_to=create_custom_path_crew)
+
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -29,6 +34,7 @@ class Airplane(models.Model):
         on_delete=models.CASCADE,
         related_name="airplane_type"
     )
+    image = models.ImageField(null=True, upload_to=create_custom_path_airplane)
 
     @property
     def total_seats(self):

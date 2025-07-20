@@ -16,6 +16,13 @@ class CrewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Crew
         fields = "__all__"
+        read_only_fields=("id", "image")
+
+
+class CrewImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Crew
+        fields = ("id", "image")
 
 
 class AirplaneTypeSerializer(serializers.ModelSerializer):
@@ -28,6 +35,7 @@ class AirplaneSerializer(serializers.ModelSerializer):
     class Meta:
         model = Airplane
         fields = "__all__"
+        read_only_fields=("id", "image")
 
 
 class AirplaneListSerializer(serializers.ModelSerializer):
@@ -41,11 +49,18 @@ class AirplaneListSerializer(serializers.ModelSerializer):
                   "rows",
                   "seats_in_row",
                   "type",
-                  "total_seats")
+                  "total_seats",
+                  "image",)
 
 
 class AirplaneRetrieveSerializer(AirplaneSerializer):
     airplane_type = AirplaneTypeSerializer(many=False, read_only=True)
+
+
+class AirplaneImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Airplane
+        fields = ("id", "image")
 
 
 class AirportSerializer(serializers.ModelSerializer):
