@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'airport_backend',
     'user',
     "rest_framework.authtoken",
+    "drf_spectacular",
 ]
 
 
@@ -87,6 +88,10 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 
