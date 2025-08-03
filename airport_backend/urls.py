@@ -7,7 +7,9 @@ from airport_backend.views import (AirplaneTypeViewSet,
                                    FlightViewSet,
                                    UserViewSet,
                                    OrderViewSet,
-                                   TicketViewSet)
+                                   TicketViewSet,
+                                   CountryViewSet,
+                                   CityViewSet)
 from rest_framework import routers
 
 app_name = "airport_backend"
@@ -22,6 +24,8 @@ router.register("flights", FlightViewSet)
 router.register("users", UserViewSet)
 router.register("orders", OrderViewSet)
 router.register("tickets", TicketViewSet)
+router.register("countries", CountryViewSet)
+router.register("cities", CityViewSet)
 urlpatterns = [
     path("", include(router.urls))
 ]

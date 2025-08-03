@@ -3,17 +3,9 @@ from slugify import slugify
 import uuid
 
 
-def create_custom_path_crew(instance, filename,):
+def create_custom_path(instance, filename,):
     _, extension = os.path.splitext(filename)
     return os.path.join(
-            "uploads/images/crews",
+            f"uploads/images/{instance.__class__.__name__.lower()}",
             f"{slugify(instance.full_name)}-{uuid.uuid4()}{extension}"
-        )
-
-
-def create_custom_path_airplane(instance, filename,):
-    _, extension = os.path.splitext(filename)
-    return os.path.join(
-            "uploads/images/airplanes",
-            f"{slugify(instance.name)}-{uuid.uuid4()}{extension}"
         )

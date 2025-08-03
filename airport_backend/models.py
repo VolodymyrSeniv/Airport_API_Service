@@ -1,13 +1,13 @@
 from django.db import models
 from datetime import datetime
 from airport_service import settings
-from airport_backend.utils import create_custom_path_crew, create_custom_path_airplane
+from airport_backend.utils import create_custom_path
 from django.core.exceptions import ValidationError
 
 class Crew(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    image = models.ImageField(null=True, upload_to=create_custom_path_crew)
+    image = models.ImageField(null=True, upload_to=create_custom_path)
 
     @property
     def full_name(self):
@@ -24,7 +24,6 @@ class AirplaneType(models.Model):
         return f"Airplane type: {self.name}"
 
 
-
 class Airplane(models.Model):
     name = models.CharField(max_length=100)
     rows = models.IntegerField(null=False, blank=False)
@@ -34,7 +33,7 @@ class Airplane(models.Model):
         on_delete=models.CASCADE,
         related_name="airplane_type"
     )
-    image = models.ImageField(null=True, upload_to=create_custom_path_airplane)
+    image = models.ImageField(null=True, upload_to=create_custom_path)
 
     @property
     def total_seats(self):
@@ -46,12 +45,37 @@ class Airplane(models.Model):
                 f"Type: {self.airplane_type.name}")
     
 
-class Airport(models.Model):
+class Country(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    closest_big_city = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"Airport: {self.name}, {self.closest_big_city}"
+        return f"{self.name}"
+
+
+class City(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    country = models.ForeignKey(
+        Country,
+        on_delete=models.CASCADE,
+        related_name="city_country"
+    )
+    image = models.ImageField(null=True, upload_to=create_custom_path)
+
+    def __str__(self):
+        return f"{self.name}, {self.country}"
+
+
+class Airport(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    closest_big_city = models.ForeignKey(
+        City,
+        on_delete=models.CASCADE,
+        related_name="airport_city",
+        default="0"
+    )
+
+    def __str__(self):
+        return f"Airport: {self.name}, {self.closest_big_city.name}"
 
 
 class Route(models.Model):
@@ -66,6 +90,9 @@ class Route(models.Model):
         related_name="route_destination"
     )
     distance = models.IntegerField(blank=False, null=False)
+
+    def __str__(self):
+        return f"{self.source} - {self.destination}"
 
 
 class Flight(models.Model):
@@ -83,10 +110,10 @@ class Flight(models.Model):
     departure_time = models.DateTimeField(unique=True)
     arrival_time = models.DateTimeField(unique=True)
 
-    # def __str__(self):
-    #     return (f"Flight: {self.route}. Plane: {self.airplane}. "
-    #             f"Crew: {self.crew}. "
-    #             f"Departure time: {self.departure_time}. Arrival time: {self.arrival_time}")
+    def __str__(self):
+        return (f"Flight: {self.route}. Plane: {self.airplane}. "
+                f"Crew: {self.crew}. "
+                f"Departure time: {self.departure_time}. Arrival time: {self.arrival_time}")
 
 
 class Order(models.Model):

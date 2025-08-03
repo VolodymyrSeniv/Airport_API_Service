@@ -6,9 +6,10 @@ from airport_backend.models import (Crew,
                     Route,
                     Flight,
                     Order,
-                    Ticket)
+                    Ticket,
+                    Country,
+                    City)
 from user.serializers import UserSerializer
-from django.contrib.auth import get_user_model
 from django.db import transaction
 
 
@@ -17,6 +18,13 @@ class CrewSerializer(serializers.ModelSerializer):
         model = Crew
         fields = "__all__"
         read_only_fields=("id", "image")
+
+
+class CrewListSerializer(CrewSerializer):
+    class Meta: 
+        model = Crew
+        fields = ("full_name", "image")
+        read_only_field=("id", "image")
 
 
 class CrewImageSerializer(serializers.ModelSerializer):
@@ -35,7 +43,7 @@ class AirplaneSerializer(serializers.ModelSerializer):
     class Meta:
         model = Airplane
         fields = "__all__"
-        read_only_fields=("id", "image")
+        read_only_fields = ("id", "image")
 
 
 class AirplaneListSerializer(serializers.ModelSerializer):
@@ -67,6 +75,45 @@ class AirportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Airport
         fields = "__all__"
+
+
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = "__all__"
+
+
+class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = "__all__"
+        read_only_fields = ("id", "image")
+
+
+class CityListSerializer(CitySerializer):
+    country_name = serializers.CharField(source="country.name", read_only=True)
+
+    class Meta:
+        model = City
+        fields = ("id", "name", "country_name", "image")
+
+
+class CityImageSerializer(CitySerializer):
+    class Meta:
+        model = City
+        field = ("id", "image")
+
+
+class AirportListSerializer(AirportSerializer):
+    city_name = serializers.CharField(source="closest_big_city.name", read_only=True)
+
+    class Meta:
+        model = Airport
+        fields = ("id", "name", "city_name",)
+
+
+class AirportRetreiveSerializer(AirportSerializer):
+    closest_big_city = CitySerializer(many=False, read_only=True)
 
 
 class RouteSerializer(serializers.ModelSerializer):
@@ -115,7 +162,7 @@ class FlightListSerializer(serializers.ModelSerializer):
     airplane_name = serializers.CharField(source="airplane.name", read_only=True)
     crew = serializers.SlugRelatedField(many=True,
                                         read_only=True,
-                                        slug_field = "first_name",)
+                                        slug_field = "full_name",)
     tickets_available = serializers.IntegerField(read_only=True)
     class Meta:
         model = Flight
