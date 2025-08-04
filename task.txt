@@ -1,3 +1,0 @@
-Ground is good, but sky is better. If you choose this one you gonna implement system for tracking flights from airports across the whole globe. 
-Diagram is simplified for you to be able to complete the project in time. 
-But make sure to add some additional logic (like countries, cities) if you really want to dive deeper here.
