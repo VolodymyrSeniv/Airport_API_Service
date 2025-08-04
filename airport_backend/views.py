@@ -40,6 +40,7 @@ from airport_backend.serializers import (CrewSerializer,
                                          CitySerializer,
                                          CityListSerializer,
                                          CityImageSerializer,
+                                         CityRetreiveSerializer,
                                          AirportListSerializer,
                                          AirportRetreiveSerializer)
 from rest_framework import viewsets
@@ -97,6 +98,8 @@ class CityViewSet(viewsets.ModelViewSet):
             return CityListSerializer
         if self.action == "upload_image":
             return CityImageSerializer
+        if self.action == "retrieve":
+            return CityRetreiveSerializer
         return CitySerializer
     
 

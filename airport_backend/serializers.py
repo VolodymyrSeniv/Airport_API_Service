@@ -98,6 +98,10 @@ class CityListSerializer(CitySerializer):
         fields = ("id", "name", "country_name", "image")
 
 
+class CityRetreiveSerializer(CitySerializer):
+    country = CountrySerializer()
+
+
 class CityImageSerializer(CitySerializer):
     class Meta:
         model = City
