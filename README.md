@@ -26,7 +26,5 @@ docker compose up
 ```
 
 ## **Getting access**
-```
-- create user via /api/user/register/
-- get access token via /api/user/token/
-```
+- create user via `/api/user/register/`
+- get access token via `/api/user/token/`
