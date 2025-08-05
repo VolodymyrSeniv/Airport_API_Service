@@ -67,8 +67,7 @@ docker compose up
 <img width="1213" height="1056" alt="image" src="https://github.com/user-attachments/assets/8ef48537-cd24-42ed-8556-9144669f506f" />
 
 ## *Database ER diagram*
-
-
+<img width="1080" height="696" alt="Airport_Api_Service" src="https://github.com/user-attachments/assets/a0ba66fa-a0c6-4e3f-902d-b587d3987fd8" />
 
 
 
