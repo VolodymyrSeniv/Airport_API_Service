@@ -105,7 +105,7 @@ class CityRetreiveSerializer(CitySerializer):
 class CityImageSerializer(CitySerializer):
     class Meta:
         model = City
-        field = ("id", "image")
+        fields = ("id", "image")
 
 
 class AirportListSerializer(AirportSerializer):
