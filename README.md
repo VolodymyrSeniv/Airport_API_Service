@@ -50,6 +50,22 @@ docker compose up
 - Flights list ednpoint
 <img width="1250" height="1271" alt="image" src="https://github.com/user-attachments/assets/a8f6d9d2-1715-42ce-b3e6-36464b1fe5a5" />
 - Crew Model list endpoint
+<img width="1883" height="1039" alt="image" src="https://github.com/user-attachments/assets/3aa7d5c1-a144-4fbd-a886-8cae4cee4d52" />
+- Route list endpoint
+<img width="1140" height="1097" alt="image" src="https://github.com/user-attachments/assets/1935c8af-806b-4132-9094-33bbdab36930" />
+- Countries list endpoint
+<img width="765" height="972" alt="image" src="https://github.com/user-attachments/assets/b3defdef-08a2-4ddc-ae0e-b6a80c612ecf" />
+- Cities list endpoint
+<img width="1133" height="1127" alt="image" src="https://github.com/user-attachments/assets/f7b41a82-94a6-42b8-982f-8cd3b9f8bf14" />
+- Cities retreive endpoint
+<img width="1213" height="1056" alt="image" src="https://github.com/user-attachments/assets/8ef48537-cd24-42ed-8556-9144669f506f" />
+
+## *Database ER diagram*
+
+
+
+
+
 
 
 
