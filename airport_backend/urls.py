@@ -5,7 +5,6 @@ from airport_backend.views import (AirplaneTypeViewSet,
                                    AirportViewSet,
                                    RouteViewSet,
                                    FlightViewSet,
-                                   UserViewSet,
                                    OrderViewSet,
                                    TicketViewSet,
                                    CountryViewSet,
@@ -21,7 +20,6 @@ router.register("airplanes", AirplaneViewSet)
 router.register("airports", AirportViewSet)
 router.register("routes", RouteViewSet)
 router.register("flights", FlightViewSet)
-router.register("users", UserViewSet)
 router.register("orders", OrderViewSet)
 router.register("tickets", TicketViewSet)
 router.register("countries", CountryViewSet)

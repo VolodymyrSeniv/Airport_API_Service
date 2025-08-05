@@ -309,13 +309,6 @@ class FlightViewSet(viewsets.ModelViewSet):
         return super().list(request, *args, **kwargs)
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    serializer_class = UserSerializer
-    queryset = get_user_model().objects.all()
-    pagination_class = SmallClassesPagination
-    permission_classes = (OnlyAdminPermnissions,)
-
-
 class TicketViewSet(viewsets.ModelViewSet):
     serializer_class = TicketSerializer
     queryset = Ticket.objects.all()
