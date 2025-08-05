@@ -48,4 +48,8 @@ docker compose up
 - All routes of the application
 <img width="1265" height="945" alt="image" src="https://github.com/user-attachments/assets/38968236-eca5-434f-8161-8f2a9283a745" />
 - Flights list ednpoint
+<img width="1250" height="1271" alt="image" src="https://github.com/user-attachments/assets/a8f6d9d2-1715-42ce-b3e6-36464b1fe5a5" />
+- Crew Model list endpoint
+
+
 
